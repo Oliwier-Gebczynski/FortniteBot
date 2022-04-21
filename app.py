@@ -11,6 +11,15 @@ headers = {
         'Authorization': api_key
 }
 
+rarity_colors = {
+        'common': 808080,
+        'uncommon': 228b22,
+        'rare': 1e90ff,
+        'legendary': daa520,
+        'epic': 9370db
+}
+
+
 print("Logging in...")
 
 client = discord.Client()
@@ -33,19 +42,23 @@ def get_store(headers):
 
     return result
 
+def embed_creator(item, rarity_colors):
+    return discord.Embed(title= item[0], url="https://fortnitepolska.pl/sklep", description="", color = rarity_colors.get(int(item[1])))
+
+
 @client.event
 async def on_ready():
     print("Online | Welcome! ")
 
 @client.event
 async def on_message(message):
-    if message.content.startswith('/Hello'):
+    if message.content.startswith('!Hello'):
         await message.channel.send('Hello there!')
 
-    elif message.content.startswith('/help'):
+    elif message.content.startswith('!help'):
         await message.channel.send("1. Commands: /p_info, /m_history, /store, /challenges. 2. Docs: https://github.com/Oliwier-Gebczynski/SoundCloudBot")
 
-    elif message.content.startswith('/store'):
+    elif message.content.startswith('!store'):
         store_result = []
         message_type = str(message.content).split(" ")
         type = message_type[1]
@@ -54,11 +67,12 @@ async def on_message(message):
 
         for item in store:
             if item[2] == type:
-                store_result.append(item)
+                await message.channel.send(embed_creator(item, rarity_colors))
 
-        await message.channel.send(store_result)
 
-    elif message.content.startswith('/p'):
+
+
+    elif message.content.startswith('!p'):
         await message.channel.send(f"Song {message.content[3:]} added to playlist!")
 
 
