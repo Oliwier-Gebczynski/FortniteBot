@@ -34,6 +34,15 @@ def get_store(headers):
 
     return result
 
+def get_player_id(headers, name):
+    url = f"https://fortnite-api.theapinetwork.com/users/id?username={name}"
+
+    payload = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response.text, response
+
 @client.event
 async def on_ready():
     print("Online | Welcome! ")
@@ -61,7 +70,12 @@ async def on_message(message):
 
         await message.channel.send(embed=embed)
 
-    elif message.content.startswith('!p'):
-        await message.channel.send(f"Song {message.content[3:]} added to playlist!")
+    elif message.content.startswith('!statistics'):
+        name = (message.content).split(' ')[1]
+        id = get_player_id(headers, name)
+
+        print(id)
+
+        #await message.channel.send(f"Song {message.content[3:]} added to playlist!")
 
 client.run(token)
