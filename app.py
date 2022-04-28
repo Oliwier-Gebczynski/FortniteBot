@@ -35,13 +35,16 @@ def get_store(headers):
     return result
 
 def get_player_id(headers, name):
+    print(name)
     url = f"https://fortnite-api.theapinetwork.com/users/id?username={name}"
 
     payload = {}
 
     response = requests.request("GET", url, headers=headers, data=payload)
+    print(response)
+    return response
 
-    return response.text, response
+
 
 @client.event
 async def on_ready():
@@ -56,7 +59,6 @@ async def on_message(message):
         await message.channel.send("1. Commands: /p_info, /m_history, /store, /challenges. 2. Docs: https://github.com/Oliwier-Gebczynski/SoundCloudBot")
 
     elif message.content.startswith('!store'):
-        message_type = str(message.content).split(" ")
         store = get_store(headers)
 
         embed = discord.Embed(
@@ -71,10 +73,10 @@ async def on_message(message):
         await message.channel.send(embed=embed)
 
     elif message.content.startswith('!statistics'):
-        name = (message.content).split(' ')[1]
-        id = get_player_id(headers, name)
+        name = str(message.content).split(' ')[1]
+        player_id = get_player_id(headers, name)
 
-        print(id)
+        print(player_id)
 
         #await message.channel.send(f"Song {message.content[3:]} added to playlist!")
 
